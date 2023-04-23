@@ -6,11 +6,20 @@ using System;
 
 public class PlayControll : MonoBehaviour
 {
-    protected static string[, ] map = new string[8, 8]; // 위치 
+    private static PlayControll instance;
+    public static PlayControll Instance { get { return instance; } }
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
+    protected static string[, ] map = new string[8, 8]; // 위치 
     protected static bool[, ] WEnableMap = new bool[8, 8];
     protected static bool[, ] BEnableMap = new bool[8, 8];
-
     protected static string ChoiceChessPieces;
     protected static int ChoiceChessPiecesNum;
     protected static int ChoiceChessPiecesAlp;
