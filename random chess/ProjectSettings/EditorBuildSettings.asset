@@ -26,13 +26,19 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/now/NormalOnLine.unity
-    guid: dd4b0dbccead735488e6563fbff27d1a
-  - enabled: 1
+  - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
+    path: Assets/Scenes/now/Start.unity
+    guid: 7c6acd32d3121bd42896af32292234be
+  - enabled: 1
+    path: Assets/Scenes/now/NormalOnLine.unity
+    guid: dd4b0dbccead735488e6563fbff27d1a
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   m_configObjects: {}
