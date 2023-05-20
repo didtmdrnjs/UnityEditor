@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", "BQueen", "BQueen", " ", " ", " ", "BQueen"},
                                  {" ", " ", " ", " ", " ", " ", "WQueen", " "},
-                                 {" ", " ", " ", "BQueen", " ", " ", " ", " "},
+                                 {" ", " ", " ", " ", "BQueen", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", "WKing"} };
 
         WEMap = new bool[8, 8];
@@ -465,38 +465,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 case '8': num = 7; break;
             }
         }
-    }
-
-    public int BAlpSwap(int alp)
-    {
-        switch (alp)
-        {
-            case 7: return 0;
-            case 6: return 1;
-            case 5: return 2;
-            case 4: return 3;
-            case 3: return 4;
-            case 2: return 5;
-            case 1: return 6;
-            case 0: return 7;
-        }
-        return 0;
-    }
-
-    public int BNumSwap(int num)
-    {
-        switch (num)
-        {
-            case 0: return 7;
-            case 1: return 6;
-            case 2: return 5;
-            case 3: return 4;
-            case 4: return 3;
-            case 5: return 2;
-            case 6: return 1;
-            case 7: return 0;
-        }
-        return 0;
     }
 
     public string getTurn()

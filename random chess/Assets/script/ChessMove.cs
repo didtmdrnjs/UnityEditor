@@ -37,10 +37,6 @@ public class ChessMove : MonoBehaviour
     void Update()
     {
         time += Time.deltaTime;
-        if (time > 2)
-        {
-            gameManager.getLoading().SetActive(false);
-        }
 
         if (gameManager.getMap(num, alp) != " ")
         {
@@ -57,46 +53,62 @@ public class ChessMove : MonoBehaviour
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'W');
-            if (pieces.GetType() == typeof(King))
+            if (pieces.GetType() == typeof(King) && gameManager.getMap(num, alp)[0] == 'W')
             {
                 pieces.isCheckmate('W');
                 gameManager.sentCheck();
             }
-            //king.isDefence('W');
-            //gameManager.sentDefence();
         }
         else
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'B');
-            if (pieces.GetType() == typeof(King))
+            if (pieces.GetType() == typeof(King) && gameManager.getMap(num, alp)[0] == 'B')
             {
-            pieces.isCheckmate('B');
-            gameManager.sentCheck();
+                pieces.isCheckmate('B');
+                gameManager.sentCheck();
             }
-            //king.isDefence('B');
-            //gameManager.sentDefence();
         }
 
-        //if (gameManager.getisWCheck() && !gameManager.getisWDefence() && gameManager.getisWCheckmate())
-        //{
-        //    gameManager.ShowResult(true);
-        //    gameManager.GameEnd(new Color(0, 0, 0), "Checkmate");
-        //}
-        //else if (gameManager.getisBCheck() && !gameManager.getisBDefence() && gameManager.getisBCheckmate())
-        //{
-        //    gameManager.ShowResult(true);
-        //    gameManager.GameEnd(new Color(255, 255, 255), "Checkmate");
-        //}
-        //else if ((!gameManager.getisWDefence() && gameManager.getisWCheckmate()) || (!gameManager.getisBDefence() && gameManager.getisBCheckmate()))
-        //{
-        //    gameManager.ShowResult(true);
-        //    gameManager.GameEnd(new Color(50, 50, 50), "Stalemate");
-        //}
-        //else
-        //{
-        //    gameManager.ShowResult(false);
-        //}
+        if (time > 2)
+        {
+            gameManager.getLoading().SetActive(false);
+        }
+        else
+        {
+            if (pieces.GetType() == typeof(King))
+            {
+                if (color == 'W' && gameManager.getMap(num, alp)[0] == 'W')
+                {
+                    king.isDefence('W');
+                }
+                else if (color == 'B' && gameManager.getMap(num, alp)[0] == 'B')
+                {
+                    king.isDefence('B');
+                }
+                gameManager.sentDefence();
+            }
+        }
+
+        if ((gameManager.getisWCheck() && !gameManager.getisWDefence()) && gameManager.getisWCheckmate())
+        {
+            gameManager.ShowResult(true);
+            gameManager.GameEnd(new Color(0, 0, 0), "Checkmate");
+        }
+        else if ((gameManager.getisBCheck() && !gameManager.getisBDefence()) && gameManager.getisBCheckmate())
+        {
+            gameManager.ShowResult(true);
+            gameManager.GameEnd(new Color(255, 255, 255), "Checkmate");
+        }
+        else if ((!gameManager.getisWDefence() && gameManager.getisWCheckmate()) || (!gameManager.getisBDefence() && gameManager.getisBCheckmate()))
+        {
+            gameManager.ShowResult(true);
+            gameManager.GameEnd(new Color(50, 50, 50), "Stalemate");
+        }
+        else
+        {
+            gameManager.ShowResult(false);
+        }
 
         if (gameManager.getisWCheck())
         {
@@ -141,8 +153,8 @@ public class ChessMove : MonoBehaviour
             if (gameManager.getWEMap(num, alp))
             {
                 prepieces.Move(num, alp);
-                king.setKMap('B');
                 king.setKMap('W');
+                king.setKMap('B');
                 gameManager.ResetWEMap();
             }
             else
@@ -157,6 +169,13 @@ public class ChessMove : MonoBehaviour
         gameManager.sentMap();
         gameManager.sentTurn();
         gameManager.sentCheck();
+
+        if (pieces.GetType() == typeof(ChessPieces))
+        {
+            if (color == 'W') king.isDefence('W');
+            else king.isDefence('B');
+            gameManager.sentDefence();
+        }
     }
 
     void ChessClicked(char color)
@@ -313,14 +332,32 @@ class King : ChessPieces
                     {
                         if (gameManager.getMap(num + i, alp + j)[0] != 'W' && !KMap[num + i, alp + j])
                         {
-                            gameManager.setWEMap(num + i, alp + j, true);
+                            string name = gameManager.getMap(num + i, alp + j);
+                            gameManager.PrePMove(num + i, alp + j, "WKing", num, alp);
+                            this.setKMap('W');
+                            gameManager.sentCheck();
+                            if (!gameManager.getisWCheck())
+                            {
+                                gameManager.setWEMap(num + i, alp + j, true);
+                            }
+                            gameManager.PrePMove(num, alp, "WKing", num + i, alp + j);
+                            gameManager.setMap(num + i, alp + j, name);
                         }
                     }
                     else
                     {
                         if (gameManager.getMap(num + i, alp + j)[0] != 'B' && !KMap[num + i, alp + j])
                         {
-                            gameManager.setBEMap(num + i, alp + j, true);
+                            string name = gameManager.getMap(num + i, alp + j);
+                            gameManager.PrePMove(num + i, alp + j, "BKing", num, alp);
+                            this.setKMap('B');
+                            gameManager.sentCheck();
+                            if (!gameManager.getisBCheck())
+                            {
+                                gameManager.setBEMap(num + i, alp + j, true);
+                            }
+                            gameManager.PrePMove(num, alp, "BKing", num + i, alp + j);
+                            gameManager.setMap(num + i, alp + j, name);
                         }
                     }
                 }
@@ -822,7 +859,6 @@ class King : ChessPieces
             {
                 switch (gameManager.getMap(num, alp).Substring(1))
                 {
-                    
                     case "Queen":
                         x = -1;
                         y = 2;
@@ -1475,25 +1511,43 @@ class King : ChessPieces
                     {
                         if (gameManager.getMap(num + i, alp + j)[0] != 'W' && !KMap[num + i, alp + j])
                         {
-                            Wcount++;
+                            string name = gameManager.getMap(num + i, alp + j);
+                            gameManager.PrePMove(num + i, alp + j, "WKing", num, alp);
+                            this.setKMap('W');
+                            gameManager.sentCheck();
+                            if (!gameManager.getisWCheck())
+                            {
+                                Wcount++;
+                            }
+                            gameManager.PrePMove(num, alp, "WKing", num + i, alp + j);
+                            gameManager.setMap(num + i, alp + j, name);
                         }
                     }
                     else
                     {
                         if (gameManager.getMap(num + i, alp + j)[0] != 'B' && !KMap[num + i, alp + j])
                         {
-                            Bcount++;
+                            string name = gameManager.getMap(num + i, alp + j);
+                            gameManager.PrePMove(num + i, alp + j, "BKing", num, alp);
+                            this.setKMap('B');
+                            gameManager.sentCheck();
+                            if (!gameManager.getisBCheck())
+                            {
+                                Bcount++;
+                            }
+                            gameManager.PrePMove(num, alp, "BKing", num + i, alp + j);
+                            gameManager.setMap(num + i, alp + j, name);
                         }
                     }
                 }
             }
         }
-        
-        if (Wcount == 0)
+
+        if (color == 'W' && Wcount == 0)
         {
             gameManager.setisWCheckmate(true);
         }
-        if (Bcount == 0)
+        if (color == 'B' && Bcount == 0)
         {
             gameManager.setisBCheckmate(true);
         }
