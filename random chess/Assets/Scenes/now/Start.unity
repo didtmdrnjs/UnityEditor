@@ -194,7 +194,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Start
+  m_Text: "\uB9E4\uCE6D"
 --- !u!222 &116986548
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -435,7 +435,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Matching...
+  m_Text: "\uB9E4\uCE6D \uC911..."
 --- !u!222 &1178415049
 CanvasRenderer:
   m_ObjectHideFlags: 0

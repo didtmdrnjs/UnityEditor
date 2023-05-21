@@ -38,4 +38,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             SceneManager.LoadScene("NormalOnLine");
         }
     }
+
+    public void Awake()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
 }
