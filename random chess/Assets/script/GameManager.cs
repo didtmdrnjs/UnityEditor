@@ -131,9 +131,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", "BQueen", "BQueen", " ", " ", " ", "BQueen"},
-                                 {" ", " ", " ", " ", " ", " ", "WQueen", " "},
-                                 {" ", " ", " ", " ", "BQueen", " ", " ", " "},
-                                 {" ", " ", " ", " ", " ", " ", " ", "WKing"} };
+                                 {" ", " ", " ", "BQueen", " ", " ", " ", " "},
+                                 {" ", "WPawn", " ", " ", " ", " ", " ", " "},
+                                 {"WKing", " ", " ", " ", " ", " ", " ", " "} };
 
         WEMap = new bool[8, 8];
         BEMap = new bool[8, 8];

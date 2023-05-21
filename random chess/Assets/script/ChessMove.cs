@@ -53,20 +53,38 @@ public class ChessMove : MonoBehaviour
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'W');
-            if (pieces.GetType() == typeof(King) && gameManager.getMap(num, alp)[0] == 'W')
+            if (pieces.GetType() == typeof(King))
             {
-                pieces.isCheckmate('W');
-                gameManager.sentCheck();
+                if (gameManager.getMap(num, alp)[0] == 'W')
+                {
+                    pieces.isCheckmate('W');
+                    king.setKMap('W');
+                    gameManager.sentCheck();
+                }
+                else
+                {
+                    king.setKMap('B');
+                    gameManager.sentCheck();
+                }
             }
         }
         else
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'B');
-            if (pieces.GetType() == typeof(King) && gameManager.getMap(num, alp)[0] == 'B')
+            if (pieces.GetType() == typeof(King))
             {
-                pieces.isCheckmate('B');
-                gameManager.sentCheck();
+                if (gameManager.getMap(num, alp)[0] == 'B')
+                {
+                    pieces.isCheckmate('B');
+                    king.setKMap('B');
+                    gameManager.sentCheck();
+                }
+                else
+                {
+                    king.setKMap('W');
+                    gameManager.sentCheck();
+                }
             }
         }
 
@@ -83,6 +101,29 @@ public class ChessMove : MonoBehaviour
                     king.isDefence('W');
                 }
                 else if (color == 'B' && gameManager.getMap(num, alp)[0] == 'B')
+                {
+                    king.isDefence('B');
+                }
+                gameManager.sentDefence();
+            }
+        }
+
+        if (gameManager.getisWCheckmate())
+        {
+            if (pieces.GetType() == typeof(King))
+            {
+                if (color == 'W' && gameManager.getMap(num, alp)[0] == 'W')
+                {
+                    king.isDefence('W');
+                }
+                gameManager.sentDefence();
+            }
+        }
+        if (gameManager.getisBCheckmate())
+        {
+            if (pieces.GetType() == typeof(King))
+            {
+                if (color == 'B' && gameManager.getMap(num, alp)[0] == 'B')
                 {
                     king.isDefence('B');
                 }
@@ -135,8 +176,6 @@ public class ChessMove : MonoBehaviour
             if (gameManager.getBEMap(num, alp))
             {
                 prepieces.Move(num, alp);
-                king.setKMap('W');
-                king.setKMap('B');
                 gameManager.ResetBEMap();
             }
             else
@@ -153,8 +192,6 @@ public class ChessMove : MonoBehaviour
             if (gameManager.getWEMap(num, alp))
             {
                 prepieces.Move(num, alp);
-                king.setKMap('W');
-                king.setKMap('B');
                 gameManager.ResetWEMap();
             }
             else
@@ -166,6 +203,9 @@ public class ChessMove : MonoBehaviour
                 }
             }
         }
+
+        king.setKMap('W');
+        king.setKMap('B');
         gameManager.sentMap();
         gameManager.sentTurn();
         gameManager.sentCheck();
@@ -175,6 +215,9 @@ public class ChessMove : MonoBehaviour
             if (color == 'W') king.isDefence('W');
             else king.isDefence('B');
             gameManager.sentDefence();
+            king.setKMap('W');
+            king.setKMap('B');
+            gameManager.sentCheck();
         }
     }
 
@@ -1484,6 +1527,10 @@ class King : ChessPieces
                 }
             }
         }
+
+        this.setKMap('W');
+        this.setKMap('B');
+        gameManager.sentCheck();
     }
 
     public override void isCheckmate(char color)
@@ -1493,12 +1540,14 @@ class King : ChessPieces
             Wcount = 0;
             gameManager.setisWCheckmate(false);
             this.setKMap('W');
+            gameManager.sentCheck();
         }
         else
         {
             Bcount = 0;
             gameManager.setisBCheckmate(false);
             this.setKMap('B');
+            gameManager.sentCheck();
         }
 
         for (int i = -1; i < 2; i++)
