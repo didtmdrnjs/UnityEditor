@@ -11,19 +11,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     private int RoomCount;
 
-    public void ClickButton()
+    private void Start()
     {
         Screen.SetResolution(1920, 1080, true);
-        PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
         RoomCount = 0;
     }
 
-    public override void OnConnectedToMaster() => PhotonNetwork.JoinRandomRoom();
-
-    public override void OnDisconnected(DisconnectCause cause)
+    public void ClickButton()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.JoinRandomRoom();
     }
+
+    //public override void OnConnectedToMaster() => 
+
+    //public override void OnDisconnected(DisconnectCause cause)
+    //{
+    //    PhotonNetwork.ConnectUsingSettings();
+    //}
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
@@ -39,11 +47,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Awake()
+    private void Awake()
     {
-        if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.Disconnect();
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.CurrentRoom.RemovedFromList = true;
+            PhotonNetwork.LeaveRoom();
         }
     }
 }

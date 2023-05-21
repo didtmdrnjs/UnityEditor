@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
@@ -42,6 +43,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool isBDefence;
 
     private bool isDraw;
+    private bool isWDraw;
+    private bool isBDraw;
 
     private string Turn;
 
@@ -92,6 +95,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField]
     private Text textbox;
 
+    [SerializeField]
+    private GameObject WDrawRecive;
+    [SerializeField]
+    private GameObject BDrawRecive;
+
     void Update()
     {
         if (isWCheck)
@@ -111,6 +119,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             WBCheck.SetActive(false);
             BBCheck.SetActive(false);
         }
+
+        if (isDraw)
+        {
+            Result.SetActive(true); 
+            GameEnd(new Color(10, 10, 10), "Draw");
+        }
+
+        WDrawRecive.SetActive(isWDraw);
+
+        BDrawRecive.SetActive(isBDraw);
     }
 
     private void Awake()
@@ -125,23 +143,23 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             instance = this;
         }
-        map = new string[8, 8] { {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {" ", " ", "BQueen", "BQueen", " ", " ", " ", " "},
-                                 {" ", " ", " ", "BQueen", " ", " ", " ", " "},
-                                 {" ", "WPawn", " ", " ", " ", " ", " ", " "},
-                                 {"WKing", " ", " ", " ", " ", " ", " ", " "} };
+        //map = new string[8, 8] { {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", "BQueen", "BQueen", " ", " ", " ", " "},
+        //                         {" ", " ", " ", "BQueen", " ", " ", " ", " "},
+        //                         {" ", "WPawn", " ", " ", " ", " ", " ", " "},
+        //                         {"WKing", " ", " ", " ", " ", " ", " ", " "} };
 
-        //map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
-        //                         {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
-        //                         {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
+        map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
+                                 {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
+                                 {" ", " ", " ", " ", " ", " ", " ", " "},
+                                 {" ", " ", " ", " ", " ", " ", " ", " "},
+                                 {" ", " ", " ", " ", " ", " ", " ", " "},
+                                 {" ", " ", " ", " ", " ", " ", " ", " "},
+                                 {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
+                                 {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
 
         WEMap = new bool[8, 8];
         BEMap = new bool[8, 8];
@@ -154,6 +172,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         BBCheck.SetActive(false);
 
         Result.SetActive(false);
+
+        WDrawRecive.SetActive(false);
+        BDrawRecive.SetActive(false);
     }
 
     public void ResetWEMap()
@@ -511,6 +532,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         textbox.color = color;
         textbox.text = value;
+
+        Invoke("SceneChange", 5f);
     }
 
     public void ShowResult(bool value)
@@ -521,6 +544,26 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject getLoading()
     {
         return Loading;
+    }
+
+    public void setisDraw(bool value)
+    {
+        isDraw = value;
+    }
+
+    public void setisWDraw(bool value)
+    {
+        isWDraw = value;
+    }
+
+    public void setisBDraw(bool value)
+    {
+        isBDraw = value;
+    }
+
+    private void SceneChange()
+    {
+        SceneManager.LoadScene("Start");
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -544,6 +587,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(isBCheckmate);
             stream.SendNext(isWDefence);
             stream.SendNext(isBDefence);
+            stream.SendNext(isWDraw);
+            stream.SendNext(isBDraw);
+            stream.SendNext(isDraw);
         }
         else
         {
@@ -567,6 +613,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             isBCheckmate = (bool)stream.ReceiveNext();
             isWDefence = (bool)stream.ReceiveNext();
             isBDefence = (bool)stream.ReceiveNext();
+            isWDraw = (bool)stream.ReceiveNext();
+            isBDraw = (bool)stream.ReceiveNext();
+            isDraw = (bool)stream.ReceiveNext();
         }
     }
 
@@ -607,6 +656,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isWDefence = WD;
         isBDefence = BD;
+    }
+
+    [PunRPC]
+    public void DrawSync(bool WD, bool BD, bool D)
+    {
+        isWDraw = WD;
+        isBDraw = BD;
+        isDraw = D;
     }
 
     public void sentMap()
@@ -652,6 +709,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         if (!PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("DefenceSync", RpcTarget.MasterClient, isWDefence, isBDefence);
+        }
+    }
+
+    public void sentDraw()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("DrawSync", RpcTarget.MasterClient, isWDraw, isBDraw, isDraw);
         }
     }
 }
