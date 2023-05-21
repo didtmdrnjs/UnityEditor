@@ -1397,7 +1397,7 @@ class King : ChessPieces
                                 }
                                 if (num == 6)
                                 {
-                                    for (int i = -1; i <= -2; i--)
+                                    for (int i = -1; i >= -2; i--)
                                     {
                                         if (gameManager.getMap(num + i, alp) == " ")
                                         {
