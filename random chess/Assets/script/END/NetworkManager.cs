@@ -23,7 +23,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void ClickButton()
     {
-        PhotonNetwork.JoinRandomRoom();
+        while (!PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
+            else
+            {
+                PhotonNetwork.ConnectUsingSettings();
+            }
+        }
     }
 
     //public override void OnConnectedToMaster() => 

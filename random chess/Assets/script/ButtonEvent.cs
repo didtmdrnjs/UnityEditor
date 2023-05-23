@@ -51,4 +51,10 @@ public class ButtonEvent : MonoBehaviour
         }
         gameManager.sentDraw();
     }
+
+    public void Surrender()
+    {
+        gameManager.setSurrender(this.name[0], true);
+        gameManager.sentSurrender();
+    }
 }

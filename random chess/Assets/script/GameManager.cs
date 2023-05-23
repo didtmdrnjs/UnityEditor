@@ -46,6 +46,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool isWDraw;
     private bool isBDraw;
 
+    private bool WSurrender;
+    private bool BSurrender;
+
+    private bool InsufficientMaterials;
+
     private string Turn;
 
     [SerializeField]
@@ -129,6 +134,17 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         WDrawRecive.SetActive(isWDraw);
 
         BDrawRecive.SetActive(isBDraw);
+
+        if (WSurrender)
+        {
+            Result.SetActive(true);
+            GameEnd(new Color(0, 0, 0), "Surrender");
+        }
+        if (BSurrender)
+        {
+            Result.SetActive(true);
+            GameEnd(new Color(255, 255, 255), "Surrender");
+        }
     }
 
     private void Awake()
@@ -561,6 +577,28 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         isBDraw = value;
     }
 
+    public void setSurrender(char color, bool value)
+    {
+        if (color == 'W')
+        {
+            WSurrender = value;
+        }
+        else
+        {
+            BSurrender = value;
+        }
+    }
+
+    public void setInsufficientMaterials(bool value)
+    {
+        InsufficientMaterials = value;
+    }
+
+    public bool getInsufficientMaterials()
+    {
+        return InsufficientMaterials;
+    }
+
     private void SceneChange()
     {
         SceneManager.LoadScene("Start");
@@ -590,6 +628,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(isWDraw);
             stream.SendNext(isBDraw);
             stream.SendNext(isDraw);
+            stream.SendNext(WSurrender);
+            stream.SendNext(BSurrender);
         }
         else
         {
@@ -616,6 +656,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             isWDraw = (bool)stream.ReceiveNext();
             isBDraw = (bool)stream.ReceiveNext();
             isDraw = (bool)stream.ReceiveNext();
+            WSurrender = (bool)stream.ReceiveNext();
+            BSurrender = (bool)stream.ReceiveNext();
         }
     }
 
@@ -664,6 +706,13 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         isWDraw = WD;
         isBDraw = BD;
         isDraw = D;
+    }
+
+    [PunRPC]
+    public void SurrenderSync(bool WS, bool BS)
+    {
+        WSurrender = WS;
+        BSurrender = BS;
     }
 
     public void sentMap()
@@ -717,6 +766,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         if (!PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("DrawSync", RpcTarget.MasterClient, isWDraw, isBDraw, isDraw);
+        }
+    }
+
+    public void sentSurrender()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("SurrenderSync", RpcTarget.MasterClient, WSurrender, BSurrender);
         }
     }
 }

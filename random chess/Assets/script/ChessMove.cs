@@ -53,6 +53,7 @@ public class ChessMove : MonoBehaviour
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'W');
+            pieces.isInsufficientMaterials(gameManager);
             if (pieces.GetType() == typeof(King))
             {
                 if (gameManager.getMap(num, alp)[0] == 'W')
@@ -72,6 +73,7 @@ public class ChessMove : MonoBehaviour
         {
             pieces = gameManager.getPieces(gameManager.getMap(num, alp).Substring(1));
             pieces.setPieces(num, alp, 'B');
+            pieces.isInsufficientMaterials(gameManager);
             if (pieces.GetType() == typeof(King))
             {
                 if (gameManager.getMap(num, alp)[0] == 'B')
@@ -145,6 +147,16 @@ public class ChessMove : MonoBehaviour
         {
             gameManager.ShowResult(true);
             gameManager.GameEnd(new Color(50, 50, 50), "Stalemate");
+        }
+        else
+        {
+            gameManager.ShowResult(false);
+        }
+
+        if (gameManager.getInsufficientMaterials())
+        {
+            gameManager.ShowResult(true);
+            gameManager.GameEnd(new Color(50, 50, 50), "Insufficient Materials");
         }
         else
         {
