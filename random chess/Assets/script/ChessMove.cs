@@ -153,15 +153,15 @@ public class ChessMove : MonoBehaviour
             gameManager.ShowResult(false);
         }
 
-        if (gameManager.getInsufficientMaterials())
-        {
-            gameManager.ShowResult(true);
-            gameManager.GameEnd(new Color(50, 50, 50), "Insufficient Materials");
-        }
-        else
-        {
-            gameManager.ShowResult(false);
-        }
+        //if (gameManager.getInsufficientMaterials())
+        //{
+        //    gameManager.ShowResult(true);
+        //    gameManager.GameEnd(new Color(50, 50, 50), "Insufficient Materials");
+        //}
+        //else
+        //{
+        //    gameManager.ShowResult(false);
+        //}
 
         if (gameManager.getisWCheck())
         {
