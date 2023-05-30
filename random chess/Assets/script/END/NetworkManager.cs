@@ -6,6 +6,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun.Demo.Cockpit;
+using System.Threading;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -20,6 +21,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void ClickButton()
     {
+        Thread.Sleep(1000);
         PhotonNetwork.JoinRandomRoom();
     }
 

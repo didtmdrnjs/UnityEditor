@@ -160,23 +160,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             instance = this;
         }
 
-        map = new string[8, 8] { {" ", " ", " ", " ", " ", " ", " ", "BKing"},
+        map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
+                                 {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {" ", " ", " ", "BBishop", " ", " ", " ", " "},
-                                 {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {"WKing", " ", " ", " ", " ", " ", " ", " "} };
-
-        //map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
-        //                         {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
-        //                         {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
+                                 {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
+                                 {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
 
         WEMap = new bool[8, 8];
         BEMap = new bool[8, 8];
