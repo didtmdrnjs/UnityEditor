@@ -27,11 +27,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool WenpR;
     private int WenpA;
 
-    private bool isWKsC = false;
-    private bool isWQsC = false;
+    private bool isWKsC = true;
+    private bool isWQsC = true;
 
-    private bool isBKsC = false;
-    private bool isBQsC = false;
+    private bool isBKsC = true;
+    private bool isBQsC = true;
 
     private bool isWCheck;
     private bool isBCheck;
