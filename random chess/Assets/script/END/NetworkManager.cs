@@ -14,26 +14,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         Screen.SetResolution(1920, 1080, true);
-        if (!PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.ConnectUsingSettings();
-        }
+        PhotonNetwork.ConnectUsingSettings();
         RoomCount = 0;
     }
 
     public void ClickButton()
     {
-        while (!PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                PhotonNetwork.JoinRandomRoom();
-            }
-            else
-            {
-                PhotonNetwork.ConnectUsingSettings();
-            }
-        }
+        PhotonNetwork.JoinRandomRoom();
     }
 
     //public override void OnConnectedToMaster() => 

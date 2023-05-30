@@ -159,23 +159,24 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             instance = this;
         }
-        //map = new string[8, 8] { {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
-        //                         {" ", " ", "BQueen", "BQueen", " ", " ", " ", " "},
-        //                         {" ", " ", " ", "BQueen", " ", " ", " ", " "},
-        //                         {" ", "WPawn", " ", " ", " ", " ", " ", " "},
-        //                         {"WKing", " ", " ", " ", " ", " ", " ", " "} };
 
-        map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
-                                 {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
+        map = new string[8, 8] { {" ", " ", " ", " ", " ", " ", " ", "BKing"},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " "},
-                                 {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
-                                 {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
+                                 {" ", " ", " ", "BBishop", " ", " ", " ", " "},
+                                 {" ", " ", " ", " ", " ", " ", " ", " "},
+                                 {"WKing", " ", " ", " ", " ", " ", " ", " "} };
+
+        //map = new string[8, 8] { {"BRook", "BKnight", "BBishop", "BQueen", "BKing", "BBishop", "BKnight", "BRook"},
+        //                         {"BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn", "BPawn"},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {" ", " ", " ", " ", " ", " ", " ", " "},
+        //                         {"WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn", "WPawn"},
+        //                         {"WRook", "WKnight", "WBishop", "WQueen", "WKing", "WBishop", "WKnight", "WRook"} };
 
         WEMap = new bool[8, 8];
         BEMap = new bool[8, 8];
@@ -630,6 +631,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(isDraw);
             stream.SendNext(WSurrender);
             stream.SendNext(BSurrender);
+            stream.SendNext(InsufficientMaterials);
         }
         else
         {
@@ -658,6 +660,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             isDraw = (bool)stream.ReceiveNext();
             WSurrender = (bool)stream.ReceiveNext();
             BSurrender = (bool)stream.ReceiveNext();
+            InsufficientMaterials = (bool)stream.ReceiveNext();
         }
     }
 
@@ -713,6 +716,12 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         WSurrender = WS;
         BSurrender = BS;
+    }
+
+    [PunRPC]
+    public void InsufficientMaterialsSync(bool IM)
+    {
+        InsufficientMaterials = IM;
     }
 
     public void sentMap()
@@ -774,6 +783,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         if (!PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("SurrenderSync", RpcTarget.MasterClient, WSurrender, BSurrender);
+        }
+    }
+
+    public void sentInsufficientMaterials()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("InsufficientMaterialsSync", RpcTarget.MasterClient, InsufficientMaterials);
         }
     }
 }

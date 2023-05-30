@@ -61,7 +61,7 @@ public class ChessPieces
                         {
                             BishopColor = (i + j) % 2;
                         }
-                        else if (BishopColor != (i + j) % 2) 
+                        else if (BishopColor == (i + j) % 2) 
                         {
                             BishopCheck = false;
                         }
@@ -78,4 +78,5 @@ public class ChessPieces
             gameManager.setInsufficientMaterials(true);
         }
     }
+
 }
