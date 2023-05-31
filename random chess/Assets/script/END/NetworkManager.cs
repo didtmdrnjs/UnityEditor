@@ -40,7 +40,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             RoomNumber = Random.Range(0, RandomRoomCount + 1);
         }
 
-        Debug.Log(mode + RoomNumber);
         PhotonNetwork.JoinRoom(mode + RoomNumber);
     }
 
@@ -51,7 +50,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     //    PhotonNetwork.ConnectUsingSettings();
     //}
 
-    public override void OnJoinRandomFailed(short returnCode, string message)
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
         if (mode == "Normal")
         {
@@ -63,7 +62,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.CreateRoom("Random" + RandomRoomCount, new RoomOptions { MaxPlayers = 2 });
             RandomRoomCount++;
         }
-        
     }
 
     private void Update()
