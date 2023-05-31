@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool InsufficientMaterials;
 
     private string Turn;
+    private int TurnNum;
 
     [SerializeField]
     private Sprite BKing;
@@ -173,6 +174,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         BEMap = new bool[8, 8];
 
         Turn = "White";
+        TurnNum = 0;
 
         WWCheck.SetActive(false);
         WBCheck.SetActive(false);
@@ -227,6 +229,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             Turn = "White";
         }
+
+        TurnNum++;
     }
 
     public void setMap(int num, int alp, string value)
@@ -509,6 +513,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         return Turn;
     }
 
+    public int getTurnNum()
+    {
+        return TurnNum;
+    }
+
     public ChessPieces getPieces(string name)
     {
         switch (name)
@@ -605,6 +614,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 stream.SendNext(i);
             }
             stream.SendNext(Turn);
+            stream.SendNext(TurnNum);
             stream.SendNext(WenpL);
             stream.SendNext(WenpR);
             stream.SendNext(WenpA);
@@ -634,6 +644,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
             Turn = (string)stream.ReceiveNext();
+            TurnNum = (int)stream.ReceiveNext();
             WenpL = (bool)stream.ReceiveNext();
             WenpR = (bool)stream.ReceiveNext();
             WenpA = (int)stream.ReceiveNext();
@@ -662,9 +673,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    public void TurnSync(string ChangedTurn)
+    public void TurnSync(string ChangedTurn, int PlusTurnNum)
     {
         Turn = ChangedTurn;
+        TurnNum = PlusTurnNum;
     }
 
     [PunRPC]
@@ -733,7 +745,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("TurnSync", RpcTarget.MasterClient, Turn);
+            photonView.RPC("TurnSync", RpcTarget.MasterClient, Turn, TurnNum);
         }
     }
 

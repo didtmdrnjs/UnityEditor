@@ -10,6 +10,9 @@ public class ShowTurn : MonoBehaviour
     [SerializeField]
     private Image Turn;
 
+    [SerializeField]
+    private Text TurnNum;
+
     private void Start()
     {
         gameManager = GameManager.Instance;
@@ -26,5 +29,7 @@ public class ShowTurn : MonoBehaviour
         {
             Turn.color = new Color(0, 0, 0);
         }
+
+        TurnNum.text = gameManager.getTurnNum().ToString();
     }
 }
