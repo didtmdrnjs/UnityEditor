@@ -6,23 +6,42 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun.Demo.Cockpit;
-using System.Threading;
+using Unity.VisualScripting;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    private int RoomCount;
+    private int NormalRoomCount;
+    private int RandomRoomCount;
+    private int RoomNumber;
+
+    [SerializeField]
+    private Toggle modeToggle;
+
+    private string mode;
 
     private void Start()
     {
         Screen.SetResolution(1920, 1080, true);
         PhotonNetwork.ConnectUsingSettings();
-        RoomCount = 0;
+        modeToggle.isOn = true;
+        NormalRoomCount = 0;
+        RandomRoomCount = 0;
+        RoomNumber = 0;
     }
 
     public void ClickButton()
     {
-        Thread.Sleep(1000);
-        PhotonNetwork.JoinRandomRoom();
+        if (mode == "Normal")
+        {
+            RoomNumber = Random.Range(0, NormalRoomCount+1);
+        }
+        else
+        {
+            RoomNumber = Random.Range(0, RandomRoomCount + 1);
+        }
+
+        Debug.Log(mode + RoomNumber);
+        PhotonNetwork.JoinRoom(mode + RoomNumber);
     }
 
     //public override void OnConnectedToMaster() => 
@@ -34,15 +53,40 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom("Normal" + RoomCount, new RoomOptions { MaxPlayers = 2 });
-        RoomCount++;
+        if (mode == "Normal")
+        {
+            PhotonNetwork.CreateRoom("Normal" + NormalRoomCount, new RoomOptions { MaxPlayers = 2 });
+            NormalRoomCount++;
+        }
+        else
+        {
+            PhotonNetwork.CreateRoom("Random" + RandomRoomCount, new RoomOptions { MaxPlayers = 2 });
+            RandomRoomCount++;
+        }
+        
     }
 
     private void Update()
     {
+        if (modeToggle.isOn)
+        {
+            mode = "Normal";
+        }
+        else
+        {
+            mode = "Random";
+        }
+
         if (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.Players.Count == 2)
         {
-            SceneManager.LoadScene("NormalOnLine");
+            if (mode == "Normal")
+            {
+                SceneManager.LoadScene("NormalOnLine");
+            }
+            else
+            {
+                SceneManager.LoadScene("RandomOnLine");
+            }
         }
     }
 
