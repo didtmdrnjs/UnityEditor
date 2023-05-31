@@ -54,6 +54,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private string Turn;
     private int TurnNum;
 
+    private bool IsReloadMap;
+
+    private string mode;
+
     [SerializeField]
     private Sprite BKing;
     [SerializeField]
@@ -146,6 +150,19 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             Result.SetActive(true);
             GameEnd(new Color(255, 255, 255), "Surrender");
         }
+
+        if (PhotonNetwork.IsMasterClient && mode == "Random" && IsReloadMap)
+        {
+            if (TurnNum % 10 == 0)
+            {
+                ReloadMap();
+                IsReloadMap = false;
+            }
+            else
+            {
+                IsReloadMap = true;
+            }
+        }
     }
 
     private void Awake()
@@ -173,6 +190,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         WEMap = new bool[8, 8];
         BEMap = new bool[8, 8];
 
+        mode = SceneManager.GetActiveScene().name.Substring(0, 6);
+
         Turn = "White";
         TurnNum = 0;
 
@@ -185,6 +204,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 
         WDrawRecive.SetActive(false);
         BDrawRecive.SetActive(false);
+
+        IsReloadMap = true;
     }
 
     public void ResetWEMap()
@@ -194,6 +215,42 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public void ResetBEMap()
     {
         BEMap = new bool[8, 8];
+    }
+
+    public void ReloadMap()
+    {
+        int RandomNumber = 0;
+
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (map[i, j].Substring(1) != "King")
+                {
+                    RandomNumber = Random.Range(0, 100);
+                    if (RandomNumber >= 0 && RandomNumber < 5)
+                    {
+                        map[i, j] = map[i, j][0] + "Queen";
+                    }
+                    else if (RandomNumber >= 5 && RandomNumber < 20)
+                    {
+                        map[i, j] = map[i, j][0] + "Rook";
+                    }
+                    else if (RandomNumber >= 20 && RandomNumber < 40)
+                    {
+                        map[i, j] = map[i, j][0] + "Bishop";
+                    }
+                    else if (RandomNumber >= 40 && RandomNumber < 60)
+                    {
+                        map[i, j] = map[i, j][0] + "Knight";
+                    }
+                    else if (RandomNumber >= 60 && RandomNumber < 100)
+                    {
+                        map[i, j] = map[i, j][0] + "Pawn";
+                    }
+                }
+            }
+        }
     }
 
     public void setP(string name, int num, int alp)
@@ -246,7 +303,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         map = value;
     }
-
     public string[,] getMap()
     {
         return map;
@@ -274,7 +330,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return WenpL;
     }
-
     public void setWenpL(bool value)
     {
         WenpL = value;
@@ -284,7 +339,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return BenpL;
     }
-
     public void setBenpL(bool value)
     {
         BenpL = value;
@@ -294,7 +348,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return WenpR;
     }
-
     public void setWenpR(bool value)
     {
         WenpR = value;
@@ -304,7 +357,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return BenpR;
     }
-
     public void setBenpR(bool value)
     {
         BenpR = value;
@@ -314,7 +366,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return WenpA;
     }
-
     public void setWenpA(int value)
     {
         WenpA = value;
@@ -324,7 +375,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return BenpA;
     }
-
     public void setBenpA(int value)
     {
         BenpA = value;
@@ -334,7 +384,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return isWKsC;
     }
-
     public void setisWKsC()
     {
         isWKsC = false;
@@ -344,7 +393,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return isWQsC;
     }
-
     public void setisWQsC()
     {
         isWQsC = false;
@@ -354,7 +402,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return isBKsC;
     }
-
     public void setisBKsC()
     {
         isBKsC = false;
@@ -364,7 +411,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         return isBQsC;
     }
-
     public void setisBQsC()
     {
         isBQsC = false;
@@ -374,7 +420,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isWCheck = value;
     }
-
     public bool getisWCheck()
     {
         return isWCheck;
@@ -384,7 +429,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isBCheck = value;
     }
-
     public bool getisBCheck()
     {
         return isBCheck;
@@ -394,7 +438,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isWCheckmate = value;
     }
-
     public bool getisWCheckmate()
     {
         return isWCheckmate;
@@ -404,7 +447,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isBCheckmate = value;
     }
-
     public bool getisBCheckmate()
     {
         return isBCheckmate;
@@ -414,7 +456,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isWDefence = value;
     }
-
     public bool getisWDefence()
     {
         return isWDefence;
@@ -424,7 +465,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         isBDefence = value;
     }
-
     public bool getisBDefence()
     {
         return isBDefence;
@@ -594,7 +634,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         InsufficientMaterials = value;
     }
-
     public bool getInsufficientMaterials()
     {
         return InsufficientMaterials;
