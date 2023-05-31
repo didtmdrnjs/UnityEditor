@@ -151,16 +151,17 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             GameEnd(new Color(255, 255, 255), "Surrender");
         }
 
+        if (TurnNum != 0 && TurnNum % 10 != 0)
+        {
+            IsReloadMap = true;
+        }
+
         if (PhotonNetwork.IsMasterClient && mode == "Random" && IsReloadMap)
         {
-            if (TurnNum % 10 == 0)
+            if (TurnNum != 0 && TurnNum % 10 == 0)
             {
                 ReloadMap();
                 IsReloadMap = false;
-            }
-            else
-            {
-                IsReloadMap = true;
             }
         }
     }
@@ -225,30 +226,46 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             for (int j = 0; j < 8; j++)
             {
-                if (map[i, j].Substring(1) != "King")
+                if (map[i, j] != " " && map[i, j].Substring(1) != "King")
                 {
-                    RandomNumber = Random.Range(0, 100);
-                    if (RandomNumber >= 0 && RandomNumber < 5)
-                    {
-                        map[i, j] = map[i, j][0] + "Queen";
-                    }
-                    else if (RandomNumber >= 5 && RandomNumber < 20)
-                    {
-                        map[i, j] = map[i, j][0] + "Rook";
-                    }
-                    else if (RandomNumber >= 20 && RandomNumber < 40)
-                    {
-                        map[i, j] = map[i, j][0] + "Bishop";
-                    }
-                    else if (RandomNumber >= 40 && RandomNumber < 60)
-                    {
-                        map[i, j] = map[i, j][0] + "Knight";
-                    }
-                    else if (RandomNumber >= 60 && RandomNumber < 100)
-                    {
-                        map[i, j] = map[i, j][0] + "Pawn";
-                    }
+                    ChangePieces(ref RandomNumber, i, j);
                 }
+            }
+        }
+    }
+
+    public void ChangePieces(ref int RandomNumber, int i, int j)
+    {
+        RandomNumber = Random.Range(0, 100);
+        if (RandomNumber >= 0 && RandomNumber < 10)
+        {
+            map[i, j] = map[i, j][0] + "Queen";
+        }
+        else if (RandomNumber >= 10 && RandomNumber < 25)
+        {
+            map[i, j] = map[i, j][0] + "Rook";
+        }
+        else if (RandomNumber >= 25 && RandomNumber < 45)
+        {
+            map[i, j] = map[i, j][0] + "Bishop";
+        }
+        else if (RandomNumber >= 45 && RandomNumber < 65)
+        {
+            map[i, j] = map[i, j][0] + "Knight";
+        }
+        else if (RandomNumber >= 65 && RandomNumber < 100)
+        {
+            if (map[i, j][0] == 'W' && i > 0)
+            {
+                map[i, j] = map[i, j][0] + "Pawn";
+            }
+            else if (map[i, j][0] == 'B' && i < 7)
+            {
+                map[i, j] = map[i, j][0] + "Pawn";
+            }
+            else
+            {
+                ChangePieces(ref RandomNumber, i, j);
             }
         }
     }

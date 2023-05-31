@@ -1455,7 +1455,7 @@ class King : ChessPieces
                         {
                             if (!gameManager.getisBDefence())
                             {
-                                if (alp + 1 < 8 && gameManager.getMap(num - 1, alp + 1)[0] == 'W')
+                                if (alp + 1 < 8 && gameManager.getMap(num + 1, alp + 1)[0] == 'W')
                                 {
                                     if (gameManager.getMap(num + 1, alp + 1)[0] != color)
                                     {
