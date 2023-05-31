@@ -24,10 +24,12 @@ public class ShowTurn : MonoBehaviour
         if (gameManager.getTurn() == "White")
         {
             Turn.color = new Color(255, 255, 255);
+            TurnNum.color = new Color(0, 0, 0);
         }
         else
         {
             Turn.color = new Color(0, 0, 0);
+            TurnNum.color = new Color(255, 255, 255);
         }
 
         TurnNum.text = gameManager.getTurnNum().ToString();
