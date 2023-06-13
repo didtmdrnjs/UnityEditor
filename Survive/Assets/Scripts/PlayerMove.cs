@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField]
     private bool isGround;
     private float JumpPower;
 
@@ -27,7 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Start()
     {
-        MoveSpeed = 50f;
+        MoveSpeed = 30f;
         rb = GetComponent<Rigidbody>();
         cam = gameObject.GetComponentInChildren<Camera>();
 
@@ -43,13 +42,13 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        //isGround = false;
-
         Move();
 
         CameraMove();
 
         Jump();
+
+        //Crouch();
     }
 
     private void Move()
@@ -79,6 +78,8 @@ public class PlayerMove : MonoBehaviour
             rb.velocity = transform.up * JumpPower;
         }
     }
+
+    
 
     private void OnCollisionStay(Collision collision)
     {
