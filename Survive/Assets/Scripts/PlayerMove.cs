@@ -26,7 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Start()
     {
-        MoveSpeed = 30f;
+        MoveSpeed = 10f;
         rb = GetComponent<Rigidbody>();
         cam = gameObject.GetComponentInChildren<Camera>();
 
@@ -48,7 +48,7 @@ public class PlayerMove : MonoBehaviour
 
         Jump();
 
-        //Crouch();
+        Crouch();
     }
 
     private void Move()
@@ -79,7 +79,19 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    
+    private void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            transform.localScale = new Vector3(1, 0.75f, 1);
+            MoveSpeed = 15;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            transform.position += new Vector3(0, 0.25f, 0);
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
 
     private void OnCollisionStay(Collision collision)
     {
