@@ -92,7 +92,7 @@ public class Player : Alive
         }
         playerControll.move_speed = 5 + StatValue["Agility"] * 0.1f;
 
-        HpSlider.GetComponent<Renderer>().material.color = HpSlider.GetComponent<Renderer>().material.color.WithAlpha(StatValue["SenseOfPain"] * 5/1000);
+        HpSlider.GetComponent<Renderer>().material.color = new Color(255, 255, 255, StatValue["SenseOfPain"] * 5/1000);
 
         HpPercent = HP / MaxHP;
         HpSlider.transform.localScale = new Vector3(HpPercent, 1, 1);

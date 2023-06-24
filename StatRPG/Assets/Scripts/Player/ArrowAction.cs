@@ -15,7 +15,7 @@ public class ArrowAction : MonoBehaviour
         time += Time.deltaTime;
         if (time > 0.933)
         {
-            GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color.WithAlpha(1);
+            GetComponent<Renderer>().material.color = new Color(255, 255, 255, 1);
             if (time > 2)
             {
                 Destroy(gameObject);
@@ -24,7 +24,7 @@ public class ArrowAction : MonoBehaviour
         }
         else
         {
-            GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color.WithAlpha(0);
+            GetComponent<Renderer>().material.color = new Color(255, 255, 255, 0);
         }
     }
 }
