@@ -7,10 +7,11 @@ using UnityEngine.SceneManagement;
 public class Player : Alive
 {
     private GameManager gameManager;
-    protected PlayerControll playerControll;
+    private PlayerControll playerControll;
 
     [SerializeField]
     private GameObject HpSlider;
+    private float HpPercent;
 
     public int SkillPoint = 0;
     public int UsedSkillPoint = 0;
@@ -18,15 +19,20 @@ public class Player : Alive
     private string job;
     private int WeaponDamage;
 
+    private int HealStandard;
+
     private bool isCritical;
 
-    public Dictionary<string, float> StatValue = new Dictionary<string, float>();
+    private Dictionary<string, float> StatValue = new Dictionary<string, float>();
 
     private void Start()
     {
         gameManager = GameManager.Instance;
         playerControll = gameObject.GetComponent<PlayerControll>();
         job = gameManager.selectJob.job;
+        SkillPoint = 50;
+
+        HealStandard = 0;
 
         switch (job)
         {
@@ -64,7 +70,15 @@ public class Player : Alive
             }
         }
 
-        HP = StatValue["Health"] * 1000;
+        MaxHP = StatValue["Health"] * 1000;
+        if (StatValue["Health"] > HealStandard)
+        {
+            HP = MaxHP;
+            while (StatValue["Health"] > HealStandard)
+            {
+                HealStandard += 20;
+            }
+        }
         PhysicsDamage = WeaponDamage * StatValue["Strength"] * 10 * StatValue["AttackSpeed"] * 5;
         CriticalPercent(StatValue["CriticalPercentage"]);
         if (StatValue["CriticalDamage"] > 0 && isCritical)
@@ -79,6 +93,10 @@ public class Player : Alive
         playerControll.move_speed = 5 + StatValue["Agility"] * 0.1f;
 
         HpSlider.GetComponent<Renderer>().material.color = HpSlider.GetComponent<Renderer>().material.color.WithAlpha(StatValue["SenseOfPain"] * 5/1000);
+
+        HpPercent = HP / MaxHP;
+        HpSlider.transform.localScale = new Vector3(HpPercent, 1, 1);
+        HpSlider.transform.position -= new Vector3(0.5f - (HpPercent / 2), 0, 0);
 
         if (HP < 0)
         {

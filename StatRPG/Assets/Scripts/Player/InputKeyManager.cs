@@ -11,14 +11,11 @@ public class InputKeyManager : MonoBehaviour
 
     private bool isSWOpen = false;
 
-    private void Awake()
-    {
-        StateWindow.SetActive(false);
-    }
-
     private void Start()
     {
         gameManager = GameManager.Instance;
+        StateWindow = GameObject.Find("StateWindow");
+        StateWindow.SetActive(false);
     }
 
     void Update()
@@ -31,7 +28,7 @@ public class InputKeyManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (!isSWOpen && gameManager.player.SkillPoint > 49)
+            if (!isSWOpen)
             {
                 StateWindow.SetActive(true);
                 isSWOpen = true;

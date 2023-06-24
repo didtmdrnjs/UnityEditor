@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
 public class PlayerControll : MonoBehaviour
 {
+    private GameManager gameManager;
     public Animator animator;
+
+    [SerializeField]
+    private GameObject Arrow;
 
     private float x_move;
     public float move_speed;
@@ -18,6 +23,11 @@ public class PlayerControll : MonoBehaviour
 
         move_speed = 5f;
         jump_power = 8f;
+    }
+
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
     }
 
     private void Update()
@@ -46,9 +56,29 @@ public class PlayerControll : MonoBehaviour
 
     private void animationParameter()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameObject.Find("arrow(Clone)"))
         {
             animator.SetBool("isAttack", true);
+            if (gameManager.selectJob.job == "Peasant")
+            {
+                GameObject NewArrow = Instantiate(Arrow, gameManager.player.gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                if (gameManager.player.transform.localScale.x > 0)
+                {
+                    NewArrow.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                    NewArrow.GetComponent<ArrowAction>().Rotation = -1;
+                }
+                else
+                {
+                    NewArrow.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -90));
+                    NewArrow.transform.localScale = new Vector3(-1, 1, 1);
+                    NewArrow.GetComponent<ArrowAction>().Rotation = 1;
+                }
+            }
+            else
+            {
+                GameObject.FindWithTag("Weapon").gameObject.GetComponent<CapsuleCollider2D>().isTrigger = false;
+                StartCoroutine(SetCollider(GameObject.FindWithTag("Weapon").gameObject.GetComponent<CapsuleCollider2D>()));
+            }
         }
         else
         {
@@ -75,5 +105,11 @@ public class PlayerControll : MonoBehaviour
         {
             isGround = false;
         }
+    }
+
+    IEnumerator SetCollider(CapsuleCollider2D capsucollider)
+    {
+        yield return new WaitForSeconds(0.8f);
+        capsucollider.isTrigger = true;
     }
 }

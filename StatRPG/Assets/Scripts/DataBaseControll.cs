@@ -77,7 +77,7 @@ public class DataBaseControll : MonoBehaviour
         dbcmd = null;
         dbcon.Close();
         dbcon = null;
-
+        
         return maxvalue;
     }
 
@@ -275,7 +275,7 @@ public class DataBaseControll : MonoBehaviour
 
         while (reader.Read())
         {
-            PlayerStatValue.Add(reader.GetString(0), reader.GetInt32(1));
+            PlayerStatValue.Add(reader.GetString(0), reader.GetFloat(1));
         }
 
         reader.Close();

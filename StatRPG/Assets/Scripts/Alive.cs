@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Alive : MonoBehaviour
 {
+    protected float MaxHP;
     protected float HP;
-    protected float PhysicsDamage;
-    protected float ManaDamage;
+    public float PhysicsDamage;
+    public float ManaDamage;
     protected float AttackSpeed;
 
-    public virtual void Hit(float Damage)
-    {
-        HP -= Damage;
-    }
+    public virtual void Hit(float Damage) { }
 
 }

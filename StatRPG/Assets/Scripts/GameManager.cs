@@ -43,14 +43,32 @@ public class GameManager : MonoBehaviour
 
         dataBaseControll = DataBaseObject.GetComponent<DataBaseControll>();
         SelectJob = GameObject.Find("Select").GetComponent<SelectJob>();
-        
+
         SetDictionary();
-        CreateStat();
     }
 
     private void Start()
     {
         Player = GameObject.Find(SelectJob.job + "(Clone)").GetComponent<Player>();
+    }
+
+    private void Update()
+    {
+        if (StatWindow != null)
+        {
+            CreateStat();
+            StopCoroutine(CreateStatC());
+        }
+        else
+        {
+            StartCoroutine(CreateStatC());
+        }
+    }
+
+    IEnumerator CreateStatC()
+    {
+        yield return null;
+        StatWindow = GameObject.Find("StateWindow");
     }
 
     private void SetDictionary()
